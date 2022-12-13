@@ -1,0 +1,37 @@
+spring:
+  mail:
+    host: smtp.gmail.com
+    password:
+    port: 587
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          timeout: 5000
+    username: team.spot.v2@gmail.com
+  datasource:
+    url: jdbc:mysql://
+    username:
+    password:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    show-sql: true
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    hibernate:
+      ddl-auto: update
+  jwt:
+    secret:
+    blacklist:
+      access-token: BlackListAccessToken
+
+  redis:
+    host:
+    port:
+
+  korea-tour-api:
+    auth-key:
+    url: http://apis.data.go.kr/B551011/KorService/
+

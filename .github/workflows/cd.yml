@@ -1,0 +1,45 @@
+# This workflow will build a Java project with Gradle
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-gradle
+
+name: deploy action
+
+on:
+  push:
+    branches: [ "master" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+          distribution: 'adopt'
+
+
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Build with Gradle
+        run: ./gradlew clean build --exclude-task test
+
+      - name: Make zip file
+        run: zip -r ./$GITHUB_SHA.zip appspec.yml scripts/* build/libs/hibuddy.jar
+        shell: bash
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Upload to S3
+        run: aws s3 cp --region ap-northeast-1 ./$GITHUB_SHA.zip s3://hi-buddy-api-deploy/$GITHUB_SHA.zip
+
+      - name: Code Deploy
+        run: aws deploy create-deployment --region ap-northeast-1 --application-name hi-buddy-api --deployment-config-name CodeDeployDefault.AllAtOnce --deployment-group-name hi-buddy-deploy-group --s3-location bucket=hi-buddy-api-deploy,bundleType=zip,key=$GITHUB_SHA.zip

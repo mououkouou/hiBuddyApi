@@ -1,0 +1,60 @@
+spring:
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+  mail:
+    host: smtp.gmail.com
+    password:
+    port:
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          timeout: 5000
+    username:
+  datasource:
+    url: jdbc:mysql://
+    username:
+    password:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    show-sql: true
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    hibernate:
+      ddl-auto: update
+      default_batch_fetch_size: 100
+  jwt:
+    secret:
+    response:
+      header: Authorization
+    token:
+      prefix: Bearer
+    blacklist:
+      access-token: BlackListAccessToken
+
+  redis:
+    host:
+    port:
+
+  korea-tour-api:
+    auth-key:
+    url: http://apis.data.go.kr/B551011/KorService/
+
+cloud:
+  aws:
+    s3:
+      bucket: spot-post-image
+    region:
+      static: ap-northeast-2
+      auto: false
+    stack:
+      auto: false
+    credentials:
+      accessKey:
+      secretKey:
+      instanceProfile: true
+
